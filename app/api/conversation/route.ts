@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import OpenAI from "openai";
 
 const openai = new OpenAI({
-    apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
+    apiKey: process.env['REACT_APP_OPENAI_API_KEY'], // This is the default and can be omitted
   });
 
 export async function POST(req:Request) {
@@ -16,7 +16,7 @@ export async function POST(req:Request) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    if (!process.env.OPENAI_API_KEY) {
+    if (!process.env.REACT_APP_OPENAI_API_KEY) {
       return new NextResponse("OpenAI API Key not configured", { status: 500 });
     }
 
@@ -26,7 +26,7 @@ export async function POST(req:Request) {
 
     const response = await openai.chat.completions.create({
         messages: messages,
-        model: 'gpt-3.5-turbo',
+        model: 'gpt-4-turbo',
       });
 
     return NextResponse.json(response);
