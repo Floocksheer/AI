@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import OpenAI from "openai";
+import ChatCompletionMessageParam from "openai";
 import dotenv from "dotenv";
 import { Empty } from "@/components/empty";
 import { loader as Loader } from "@/components/loader";
@@ -45,20 +46,35 @@ const CodePage = () => {
       };
       
       // const response = await openai.chat.completions.create({
-      //   model: "gpt-3.5-turbo", // or gpt-4
+      //    model: "gpt-3.5-turbo", // or gpt-4
       //   content: [userMessage],
-      // });
+      //  });
 
-      const response = await openai.chat.completions.create({
-        messages: [{ role: "system", content: "You are a code generator and when I ask you about that start with that text:'I am a code generator' and keep generating but if told otherwise You ##MUST answer ONLY markdown code snippets.Use code comments to explain your code. ##__## " },{ role: "user", content: userMessage.content }],
-        model: "gpt-4",
+      
+      let parsedMessage = messages.map((message) => (
+        
+          [{ role: "system", content: "You are a code generator and when I ask you about that start with that text:'I am a code generator' and keep generating but if told otherwise You ##MUST answer ONLY markdown code snippets.Use code comments to explain your code. ##__## " },
+          {role: "user", content: message.userMessage},
+          {role: "assistant", content: message.content}]
+      ))
+      let finishedArray: { role: string; content: string }[] = [];
+      for (let i = 0; i < parsedMessage.length; i++) {
+        finishedArray.push(parsedMessage[i][0]);
+        finishedArray.push(parsedMessage[i][1]);
+        finishedArray.push(parsedMessage[i][2]);
+      }
+      finishedArray.push({ role: "system", content: "You are a code generator and when I ask you about that start with that text:'I am a code generator' and keep generating but if told otherwise You ##MUST answer ONLY markdown code snippets.Use code comments to explain your code. ##__## " })
+      finishedArray.push({ role: "user", content: userMessage.content })
+      
+      const response = await axios.post("/api/code", {
+        messages:finishedArray,
       });
-     
+   
 
       messages.unshift({
-        role: response.choices[0].message.role,
+        role: response.data.choices[0].message.role,
         userMessage: userMessage.content,
-        content: response.choices[0].message.content || ""
+        content: response.data.choices[0].message.content || ""
       });
 
       setMessages(messages);

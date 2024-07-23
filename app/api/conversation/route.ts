@@ -8,13 +8,13 @@ const openai = new OpenAI({
 
 export async function POST(req:Request) {
   try {
-    const { userId } = useAuth();
+   // const { userId } = useAuth();
     const body = await req.json();
     const { messages } = body;
 
-    if (!userId) {
-      return new NextResponse("Unauthorized", { status: 401 });
-    }
+    // if (!userId) {
+    //   return new NextResponse("Unauthorized", { status: 401 });
+    // }
 
     if (!process.env.REACT_APP_OPENAI_API_KEY) {
       return new NextResponse("OpenAI API Key not configured", { status: 500 });
@@ -25,8 +25,8 @@ export async function POST(req:Request) {
     }
 
     const response = await openai.chat.completions.create({
-        messages: messages,
-        model: 'gpt-4-turbo',
+        messages:[...messages] ,
+        model: "gpt-4o-mini",
       });
 
     return NextResponse.json(response);

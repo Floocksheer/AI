@@ -1,7 +1,7 @@
 "use client";
 import axios from "axios";
 import * as z from "zod";
-import { Bot, MessageSquare } from "lucide-react";
+import { Bot, ImageIcon } from "lucide-react";
 import { Heading } from "@/components/heading";
 import { useForm } from "react-hook-form";
 import { formSchema } from "./constants";
@@ -23,7 +23,7 @@ const openai = new OpenAI({
   apiKey: process.env.NEXT_PUBLIC_API_KEY, dangerouslyAllowBrowser: true 
 });
 
-const ConversationPage = () => {
+const ImagePage = () => {
   const router = useRouter();
   const [messages, setMessages] = useState<{ role: string; userMessage: string; content: string }[]>([]);
 
@@ -84,11 +84,11 @@ const ConversationPage = () => {
   return (
     <div>
       <Heading
-        title="Conversation"
-        description="Our most advanced conversation model."
-        icon={MessageSquare}
-        iconColor="text-violet-500"
-        bgColor="bg-violet-500/10"
+        title="Image Generation"
+        description="Turn your prompt into an image."
+        icon={ImageIcon}
+        iconColor="text-pink-700"
+        bgColor="bg-pink-700/10"
       />
       <div className="px-4 lg:px-8">
         <div>
@@ -154,6 +154,6 @@ const ConversationPage = () => {
   );
 };
 
-export default ConversationPage;
+export default ImagePage;
 
  
