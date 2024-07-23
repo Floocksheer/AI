@@ -1,7 +1,7 @@
 "use client";
 import axios from "axios";
 import * as z from "zod";
-import { Bot, MessageSquare } from "lucide-react";
+import { Bot, Code, Divide } from "lucide-react";
 import { Heading } from "@/components/heading";
 import { useForm } from "react-hook-form";
 import { formSchema } from "./constants";
@@ -17,13 +17,14 @@ import OpenAI from "openai";
 import dotenv from "dotenv";
 import { Empty } from "@/components/empty";
 import { loader as Loader } from "@/components/loader";
+import ReactMarkdown from "react-markdown";
 // Update your OpenAI API client configuration
 dotenv.config();
 const openai = new OpenAI({
   apiKey: process.env.NEXT_PUBLIC_API_KEY, dangerouslyAllowBrowser: true 
 });
 
-const ConversationPage = () => {
+const CodePage = () => {
   const router = useRouter();
   const [messages, setMessages] = useState<{ role: string; userMessage: string; content: string }[]>([]);
 
@@ -49,15 +50,17 @@ const ConversationPage = () => {
       // });
 
       const response = await openai.chat.completions.create({
-        messages: [{ role: "user", content: userMessage.content }],
+        messages: [{ role: "system", content: "You are a code generator and when I ask you about that start with that text:'I am a code generator' and keep generating but if told otherwise You ##MUST answer ONLY markdown code snippets.Use code comments to explain your code. ##__## " },{ role: "user", content: userMessage.content }],
         model: "gpt-4",
       });
-      console.log("potatos");
+     
+
       messages.unshift({
         role: response.choices[0].message.role,
         userMessage: userMessage.content,
         content: response.choices[0].message.content || ""
       });
+
       setMessages(messages);
     } catch (error) {
       console.error(error);
@@ -69,11 +72,11 @@ const ConversationPage = () => {
   return (
     <div>
       <Heading
-        title="Conversation"
-        description="Our most advanced conversation model."
-        icon={MessageSquare}
-        iconColor="text-violet-500"
-        bgColor="bg-violet-500/10"
+        title="Code Generation"
+        description="Generate code using descriptive text."
+        icon={Code}
+        iconColor="text-green-700"
+        bgColor="bg-green-700/10"
       />
       <div className="px-4 lg:px-8">
         <div>
@@ -87,7 +90,7 @@ const ConversationPage = () => {
                       <Input
                         className="border-0 outline-none focus-visible:ring-0 focus-visible:ring-transparent"
                         disabled={isLoading}
-                        placeholder="How do I calculate the radius of a circle?"
+                        placeholder="Please type what would you like to ask?"
                         {...field}
                       />
                     </FormControl>
@@ -118,16 +121,36 @@ const ConversationPage = () => {
                 <>
                   <div className="user p-8 w-full flex items-start gap-x-8 rounded-lg bg-white border border-black/10" key={index}>
                     <UserAvatar/>
-                    <p>
-                    {message.userMessage}
-                    </p>
+                    <ReactMarkdown components={{pre:({node,...props})=>(
+                      <div className="overflow-auto w-full my-2 bg-black/10 p-2 rounded-lg">
+                        <pre {...props}/>
+                      </div>
+                    ),
+                    code:({node,...props})=>(
+                      <code className="bg-black/10 rounded-lg p-1" {...props}/>
+                    )
+                    }}
+                    className="rext-sm overflow-hidden leading-7"
+                    >
+                      {message.userMessage || ""}
+                    </ReactMarkdown>
                   </div>
                   <br />
                   <div className="assistant p-8 w-full flex items-start gap-x-8 rounded-lg bg-muted" key={index}>
                     <BotAvatar/>
-                    <p>
-                    {message.content}
-                    </p>
+                    <ReactMarkdown components={{pre:({node,...props})=>(
+                      <div className="overflow-auto w-full my-2 bg-black/10 p-2 rounded-lg">
+                        <pre {...props}/>
+                      </div>
+                    ),
+                    code:({node,...props})=>(
+                      <code className="bg-black/10 rounded-lg p-1" {...props}/>
+                    )
+                    }}
+                     className="rext-sm overflow-hidden leading-7"
+                    >
+                      {message.content || ""}
+                    </ReactMarkdown>
                   </div>
                 </>
               ))}
@@ -139,6 +162,6 @@ const ConversationPage = () => {
   );
 };
 
-export default ConversationPage;
+export default CodePage;
 
  
