@@ -5,8 +5,8 @@ import Image from 'next/image';
 export const loader = () => {
 
     return(
-        <div className="h-full flex flex-col gap-y-4 item-center justify-center">
-           <div className="w-10 h-10 relative animate-spin float-right w-10 logoicon">
+        <div className="h-full flex flex-col gap-y-4 item-center justify-center" style={{ alignItems: "center" }}>
+           <div className="w-20 h-20 relative animate-spin float-right">
             <Image
             alt="logo"
             fill
