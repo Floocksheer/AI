@@ -74,6 +74,7 @@ const ConversationPage = () => {
       content: response.data.choices[0].message.content || ""
     });
       setMessages(messages);
+      form.reset();
     } catch (error) {
       console.error(error);
     } finally {

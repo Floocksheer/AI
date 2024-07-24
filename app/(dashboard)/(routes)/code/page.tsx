@@ -78,6 +78,7 @@ const CodePage = () => {
       });
 
       setMessages(messages);
+      form.reset();
     } catch (error) {
       console.error(error);
     } finally {
