@@ -1,7 +1,7 @@
 "use client";
 import axios from "axios";
 import * as z from "zod";
-import { Bot, ImageIcon } from "lucide-react";
+import { Bot, Download, ImageIcon } from "lucide-react";
 import { Heading } from "@/components/heading";
 import { useForm } from "react-hook-form";
 import { amountOptions,formSchema, resolutionOptions } from "./constants";
@@ -18,6 +18,8 @@ import dotenv from "dotenv";
 import { Empty } from "@/components/empty";
 import { loader as Loader } from "@/components/loader";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Card, CardFooter } from "@/components/ui/card";
+import Image from "next/image";
 
 // Update your OpenAI API client configuration
 dotenv.config();
@@ -51,13 +53,13 @@ const ImagePage = () => {
 
      
     setImages([]);
-    console.log(values);
+    //console.log(values);
     
-//     const response = await axios.post("/api/image",values);
+       const response = await axios.post("/api/image",values);
  
-// const urls= response.data.map((image:{url:string})=>image.url);
-//     setImages(urls);
-//      form.reset();
+       const urls= response.data.map((image:{url:string})=>image.url);
+    setImages(urls);
+     form.reset();
     } catch (error) {
       console.error(error);
     } finally {
@@ -172,10 +174,30 @@ const ImagePage = () => {
               <Empty label="No images generated."/>
             </div>
           )}
-          <div>
-            Images will be rendered here.
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-8">
+            {Images.map((src) => (
+              <Card
+              key={src}
+              className="rounded-lg overflow-hidden"
+              >
+                <div className="relative aspect-square">
+                   <Image
+                    fill
+                    alt="Image"
+                    src={src}
+                   />
+                </div>
+                <CardFooter className="p-2">
+                  <Button onClick={ ()=> window.open(src)} variant="secondary" className="w-full">
+                    <Download className="h-4 w-4 mr-2"/>
+                    Download
+                  </Button>
+                </CardFooter>
+              </Card>
+
+            ))}
           </div>
-           
+
         </div>
       </div>
     </div>
