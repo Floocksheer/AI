@@ -88,8 +88,8 @@ const ConversationPage = () => {
         title="Music Generation"
         description="Turn your prompt into music."
         icon={Music}
-        iconColor="text-violet-500"
-        bgColor="bg-violet-500/10"
+        iconColor="text-emerald-500"
+        bgColor="bg-emerald-500/10"
       />
       <div className="px-4 lg:px-8">
         <div>
