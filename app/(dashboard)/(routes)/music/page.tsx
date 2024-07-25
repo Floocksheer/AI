@@ -23,9 +23,9 @@ const openai = new OpenAI({
   apiKey: process.env.NEXT_PUBLIC_API_KEY, dangerouslyAllowBrowser: true 
 });
 
-const ConversationPage = () => {
+const MusicPage = () => {
   const router = useRouter();
-  const [messages, setMessages] = useState<{ role: string; userMessage: string; content: string }[]>([]);
+  const [music, setMusic] = useState<string>();
 
 
   const form = useForm({
@@ -38,42 +38,22 @@ const ConversationPage = () => {
   const isLoading = form.formState.isSubmitting;
   const onSubmit = async (values: { prompt: string; }) => {
     try {
-      const userMessage = { 
-        role: 'user',
-        content: values.prompt,
-      };
+      
       
       // const response = await openai.chat.completions.create({
       //   model: "gpt-3.5-turbo", // or gpt-4
       //   content: [userMessage],
       // });
-
-      let parsedMessage = messages.map((message) => (
-        
-        [
-        {role: "user", content: message.userMessage},
-        {role: "assistant", content: message.content}]
-    ))
-    let finishedArray: { role: string; content: string }[] = [];
-    for (let i = 0; i < parsedMessage.length; i++) {
-      finishedArray.push(parsedMessage[i][0]);
-      finishedArray.push(parsedMessage[i][1]);
-      //finishedArray.push(parsedMessage[i][2]);
-    }
-    finishedArray.push({ role: "system", content: userMessage.content})
-    finishedArray.push({ role: "user", content: userMessage.content })
+        setMusic(undefined);
+      
     
-    const response = await axios.post("/api/conversation", {
-      messages:finishedArray,
-    });
+    const response = await axios.post("/api/music",values );
+ 
+    
  
 
-    messages.unshift({
-      role: response.data.choices[0].message.role,
-      userMessage: userMessage.content,
-      content: response.data.choices[0].message.content || ""
-    });
-      setMessages(messages);
+    
+      setMusic(response.data.audio);
       form.reset();
     } catch (error) {
       console.error(error);
@@ -103,7 +83,7 @@ const ConversationPage = () => {
                       <Input
                         className="border-0 outline-none focus-visible:ring-0 focus-visible:ring-transparent"
                         disabled={isLoading}
-                        placeholder="Pass what would you like to ask?"
+                        placeholder="Which music you are looking for?"
                         {...field}
                       />
                     </FormControl>
@@ -122,39 +102,22 @@ const ConversationPage = () => {
               <Loader/>
             </div>
           )}
-          {messages.length === 0 && !isLoading && (
+          {!music && !isLoading && (
             <div>
-              <Empty label="No conversation started."/>
+              <Empty label="No music generated."/>
             </div>
           )}
-          {messages.length > 0 && (
-            
-            <div>
-              {messages.reverse().map((message, index) => (
-                <>
-                  <div className="user p-8 w-full flex items-start gap-x-8 rounded-lg bg-white border border-black/10" key={index}>
-                    <UserAvatar/>
-                    <p>
-                    {message.userMessage}
-                    </p>
-                  </div>
-                  <br />
-                  <div className="assistant p-8 w-full flex items-start gap-x-8 rounded-lg bg-muted" key={index}>
-                    <BotAvatar/>
-                    <p>
-                    {message.content}
-                    </p>
-                  </div>
-                </>
-              ))}
-            </div>
-          )}
+        {music && (
+          <audio controls className="w-full mt-8">
+            <source src={music}/>
+            </audio>
+        )}
         </div>
       </div>
     </div>
   );
 };
 
-export default ConversationPage;
+export default MusicPage;
 
  
