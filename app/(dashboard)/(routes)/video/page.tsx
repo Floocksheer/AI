@@ -17,6 +17,7 @@ import OpenAI from "openai";
 import dotenv from "dotenv";
 import { Empty } from "@/components/empty";
 import { loader as Loader } from "@/components/loader";
+import { useProModal } from "@/hooks/use-pro-modal";
 // Update your OpenAI API client configuration
 dotenv.config();
 const openai = new OpenAI({
@@ -24,6 +25,7 @@ const openai = new OpenAI({
 });
 
 const VideoPage = () => {
+  const proModal=useProModal();
   const router = useRouter();
   const [video, setVideo] = useState<string>();
 
@@ -55,8 +57,10 @@ const VideoPage = () => {
     
       setVideo(response.data[0]);
       form.reset();
-    } catch (error) {
-      console.error(error);
+    } catch (error:any) {
+      if(error?.response?.status===403){
+        proModal.onOpen();
+    }
     } finally {
       router.refresh();
     }

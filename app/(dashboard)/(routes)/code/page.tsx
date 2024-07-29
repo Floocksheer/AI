@@ -19,6 +19,7 @@ import dotenv from "dotenv";
 import { Empty } from "@/components/empty";
 import { loader as Loader } from "@/components/loader";
 import ReactMarkdown from "react-markdown";
+import { useProModal } from "@/hooks/use-pro-modal";
 // Update your OpenAI API client configuration
 dotenv.config();
 const openai = new OpenAI({
@@ -26,6 +27,7 @@ const openai = new OpenAI({
 });
 
 const CodePage = () => {
+  const proModal=useProModal();
   const router = useRouter();
   const [messages, setMessages] = useState<{ role: string; userMessage: string; content: string }[]>([]);
 
@@ -79,8 +81,10 @@ const CodePage = () => {
 
       setMessages(messages);
       form.reset();
-    } catch (error) {
-      console.error(error);
+    } catch (error:any) {
+      if(error?.response?.status===403){
+        proModal.onOpen();
+      }
     } finally {
       router.refresh();
     }

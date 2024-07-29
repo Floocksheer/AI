@@ -20,6 +20,7 @@ import { loader as Loader } from "@/components/loader";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardFooter } from "@/components/ui/card";
 import Image from "next/image";
+import { useProModal } from "@/hooks/use-pro-modal";
 
 // Update your OpenAI API client configuration
 dotenv.config();
@@ -28,6 +29,7 @@ const openai = new OpenAI({
 });
 
 const ImagePage = () => {
+  const proModal=useProModal(); 
   const router = useRouter();
   const [Images,setImages] = useState<string[]>([]);
 
@@ -60,8 +62,10 @@ const ImagePage = () => {
        const urls= response.data.map((image:{url:string})=>image.url);
     setImages(urls);
      form.reset();
-    } catch (error) {
-      console.error(error);
+    } catch (error:any) {
+      if(error?.response?.status===403){
+        proModal.onOpen();
+    }
     } finally {
       router.refresh();
     }
