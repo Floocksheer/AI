@@ -30,6 +30,7 @@
     "react-hook-form": "^7.52.1",
     "react-markdown": "^9.0.1",
     "replicate": "^0.31.1",
+    "stripe": "^16.5.0",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.23.8",
