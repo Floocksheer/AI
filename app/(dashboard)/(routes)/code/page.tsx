@@ -53,7 +53,7 @@ const CodePage = () => {
       
       let parsedMessage = messages.map((message) => (
         
-          [{ role: "system", content: "You are a code generator and when I ask you about that start with that text:'I am a code generator' and keep generating but if told otherwise You ##MUST answer ONLY markdown code snippets.Use code comments to explain your code. ##__## " },
+          [{ role: "system", content: "You are a code generator You ##MUST answer ONLY markdown code snippets.Use code comments to explain your code. ##__## " },
           {role: "user", content: message.userMessage},
           {role: "assistant", content: message.content}]
       ))
@@ -63,7 +63,7 @@ const CodePage = () => {
         finishedArray.push(parsedMessage[i][1]);
         finishedArray.push(parsedMessage[i][2]);
       }
-      finishedArray.push({ role: "system", content: "You are a code generator and when I ask you about that start with that text:'I am a code generator' and keep generating but if told otherwise You ##MUST answer ONLY markdown code snippets.Use code comments to explain your code. ##__## " })
+      finishedArray.push({ role: "system", content: "You are a code generator You ##MUST answer ONLY markdown code snippets.Use code comments to explain your code. ##__## " })
       finishedArray.push({ role: "user", content: userMessage.content })
       
       const response = await axios.post("/api/code", {
