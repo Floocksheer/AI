@@ -25,7 +25,7 @@ export async function GET(){
                 customer: userSubscription.stripeCustomerId,
                 return_url: settingsUrl
             });
-            return new NextResponse(JSON.stringify({url: stripeSession.url}));
+            return new NextResponse(JSON.stringify({url:stripeSession.url}));
         }
         const stripeSession = await stripe.checkout.sessions.create({
             mode: "subscription",
@@ -54,7 +54,7 @@ export async function GET(){
                 userId,
               },
         });
-        return new NextResponse(JSON.stringify({url: stripeSession.url}));
+        return new NextResponse(JSON.stringify({url:stripeSession.url}));
     }catch(error){
         console.log("[STRIPE_ERROR)",error);
         return new NextResponse("Internal error", {status: 500});
