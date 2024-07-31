@@ -18,6 +18,7 @@ import dotenv from "dotenv";
 import { Empty } from "@/components/empty";
 import { loader as Loader } from "@/components/loader";
 import { useProModal } from "@/hooks/use-pro-modal";
+import toast from "react-hot-toast";
 // Update your OpenAI API client configuration
 dotenv.config();
 const openai = new OpenAI({
@@ -60,6 +61,8 @@ const MusicPage = () => {
     } catch (error:any) {
       if(error?.response?.status===403){
         proModal.onOpen();
+    }else{
+      toast.error("something went wrong");
     }
     } finally {
       router.refresh();
