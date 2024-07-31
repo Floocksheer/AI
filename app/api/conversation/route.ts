@@ -1,7 +1,8 @@
 import { useAuth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
-import { increaseApiLimit,checkApiLimit } from"@/lib/api-limit";      
+import { increaseApiLimit,checkApiLimit } from"@/lib/api-limit";
+import { checkSubscription } from "@/lib/subscription";      
 
 const openai = new OpenAI({
     apiKey: process.env['REACT_APP_OPENAI_API_KEY'], // This is the default and can be omitted
@@ -26,7 +27,8 @@ export async function POST(req:Request) {
     }
 
     const freeTrail = await checkApiLimit();
-    if (!freeTrail) {
+    const isPro = await checkSubscription();
+    if (!freeTrail&& !isPro) {
       return new NextResponse("Free trial has expired", { status: 403 });
     }
 
@@ -34,8 +36,10 @@ export async function POST(req:Request) {
         messages:[...messages] ,
         model: "gpt-3.5-turbo",
       });
-
+      
+      if(!isPro){
       await increaseApiLimit();
+      }
 
     return NextResponse.json(response);
   } catch (error) {

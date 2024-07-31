@@ -49,7 +49,6 @@ export const ProModal = () => {
       try {
         setLoading(true);
           const response = await axios.get("/api/stripe");
-          console.log("Stripe response:", response.data);
         window.location.href = response.data.url;
       } catch (error) {
         console.error(error,"STRIPE_CLIENT_ERROR");
@@ -90,7 +89,6 @@ export const ProModal = () => {
                  </DialogHeader>
                  <DialogFooter>
                     <Button onClick={onSubscribe} size="lg" variant="premium" className="w-full">
-                    {loading ? "Loading..." : "Upgrade"}
                         Upgrade
                         <Zap className="w-4 h-4 ml-2 fill-white"/>
                     </Button>
