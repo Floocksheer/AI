@@ -74,7 +74,7 @@ const Sidebar =({
                 <Image fill src="/logo.png" alt="Logo"/>
                </div> 
                <h1 className= {cn ("text-2xl font-bold", montserrat.className) }>
-                    Genious
+                    Chevy AI
                </h1>
              </Link>
               
