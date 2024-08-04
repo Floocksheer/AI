@@ -23,8 +23,8 @@ export default function RootLayout({
     <html lang="en">
       <CrispProvider/>
       <body className={inter.className}>
-       <ModalProvider/>
        <ToasterProvider/>
+       <ModalProvider/>
         {children}
         </body>
     </html>
